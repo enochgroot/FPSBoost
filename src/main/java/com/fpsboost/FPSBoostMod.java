@@ -1,6 +1,5 @@
 package com.fpsboost;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -12,14 +11,10 @@ public class FPSBoostMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // KeyMapping in 1.21.11: (name, InputConstants.Type, keyCode, category)
-        // GLFW key K = 75
-        configKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-            "key.fpsboost.config",
-            InputConstants.Type.KEYSYM,
-            75,
-            "key.categories.fpsboost"
-        ));
+        // 3-arg KeyMapping(name, keyCode, category) — keyCode 75 = GLFW K
+        configKey = KeyBindingHelper.registerKeyBinding(
+            new KeyMapping("key.fpsboost.config", 75, "key.categories.misc")
+        );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (configKey.consumeClick()) {
