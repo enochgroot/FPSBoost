@@ -14,10 +14,9 @@ jobs:
       - run: chmod +x gradlew
       - run: ./gradlew --no-build-cache build
       - run: ls -lh build/libs/
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: fpsboost-MC1.21.11
+          name: fpsboost-v2-MC1.21.11
           path: |
             build/libs/*.jar
             !build/libs/*-sources.jar
