@@ -4,9 +4,11 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "EntityRenderDispatcherMixin",
-    "ParticleEngineMixin",
+    "EntityRendererMixin",
+    "GameRendererMixin",
     "LevelRendererMixin",
-    "BlockEntityCullMixin"
+    "BlockEntityCullMixin",
+    "ParticleEngineMixin"
   ],
   "injectors": {"defaultRequire": 0}
 }
