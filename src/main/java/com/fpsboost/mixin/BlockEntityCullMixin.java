@@ -14,16 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher")
 public class BlockEntityCullMixin {
 
-    /**
-     * Cull block entities (chests, furnaces, signs, etc.) that are:
-     * 1. Beyond blockEntityRenderDist blocks, OR
-     * 2. Outside the camera frustum
-     * Returning null from tryExtractRenderState skips rendering (expected by vanilla).
-     * Confirmed in 1.21.11 mappings: tryExtractRenderState(BlockEntity, ...)
-     */
+    // Use Object (not wildcard) for CallbackInfoReturnable to avoid Mixin runtime type errors
     @Inject(method = "tryExtractRenderState", at = @At("HEAD"), cancellable = true)
     private void fpsboost$cullBlockEntity(BlockEntity blockEntity,
-            CallbackInfoReturnable<?> cir) {
+            CallbackInfoReturnable<Object> cir) {
         if (!FPSBoostConfig.enabled || !FPSBoostConfig.blockEntityCulling) return;
 
         Minecraft mc = Minecraft.getInstance();
@@ -36,10 +30,8 @@ public class BlockEntityCullMixin {
         double dist2 = dx*dx + dy*dy + dz*dz;
         double cap = FPSBoostConfig.blockEntityRenderDist;
 
-        // Distance cull
         if (dist2 > cap * cap) { cir.setReturnValue(null); return; }
 
-        // Frustum cull (if within distance but out of view)
         if (mc.levelRenderer != null) {
             Frustum frustum = mc.levelRenderer.getCapturedFrustum();
             if (frustum != null) {
