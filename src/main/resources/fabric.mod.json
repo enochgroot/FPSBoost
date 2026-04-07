@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "fpsboost",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "name": "FPSBoost",
-  "description": "FPS optimizer v2.1: entity culling (FIXED), particle cap, dynamic render distance",
+  "description": "v3: real frustum culling, block entity culling, weather/sky skip underground",
   "environment": "client",
   "entrypoints": {"client": ["com.fpsboost.FPSBoostMod"]},
   "mixins": ["fpsboost.mixins.json"],
