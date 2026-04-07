@@ -13,5 +13,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: fpsboost-v3-MC1.21.11
-          path: "build/libs/fpsboost-3.0.0.jar"
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+            !build/libs/*-dev.jar
           if-no-files-found: warn
