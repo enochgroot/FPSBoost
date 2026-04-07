@@ -7,6 +7,7 @@
     "EntityRendererMixin",
     "GameRendererMixin",
     "LevelRendererMixin",
+    "LightTextureMixin",
     "BlockEntityCullMixin",
     "ParticleEngineMixin"
   ],
