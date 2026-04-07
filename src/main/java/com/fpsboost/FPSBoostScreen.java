@@ -11,68 +11,63 @@ public class FPSBoostScreen extends Screen {
     private final Screen parent;
 
     public FPSBoostScreen(Screen parent) {
-        super(Component.literal("FPSBoost v2 Settings"));
+        super(Component.literal("FPSBoost v3 Settings"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        int cx = this.width / 2;
-        int y = 55;
-        final int BW = 220, BH = 20, GAP = 24, HBW = 105;
+        int cx = this.width / 2, y = 52;
+        final int BW = 220, BH = 20, GAP = 23, HW = 105;
 
-        // Master toggle
-        addRenderableWidget(Button.builder(
-            Component.literal("FPSBoost: " + on(FPSBoostConfig.enabled)),
-            b -> { FPSBoostConfig.enabled = !FPSBoostConfig.enabled;
-                   b.setMessage(Component.literal("FPSBoost: " + on(FPSBoostConfig.enabled))); })
-            .bounds(cx - BW/2, y, BW, BH).build()); y += GAP;
+        addToggle("FPSBoost Master", FPSBoostConfig.enabled,
+            v -> FPSBoostConfig.enabled = v, cx, y, BW, BH); y += GAP;
 
-        // Entity culling
-        addRenderableWidget(Button.builder(
-            Component.literal("Entity Culling: " + on(FPSBoostConfig.entityCulling)),
-            b -> { FPSBoostConfig.entityCulling = !FPSBoostConfig.entityCulling;
-                   b.setMessage(Component.literal("Entity Culling: " + on(FPSBoostConfig.entityCulling))); })
-            .bounds(cx - BW/2, y, BW, BH).build()); y += GAP;
+        addToggle("Entity Culling (Real Frustum)", FPSBoostConfig.entityCulling,
+            v -> FPSBoostConfig.entityCulling = v, cx, y, BW, BH); y += GAP;
 
-        // Particle limit toggle + slider
-        addRenderableWidget(Button.builder(
-            Component.literal("Particle Limit: " + on(FPSBoostConfig.particleLimit)),
-            b -> { FPSBoostConfig.particleLimit = !FPSBoostConfig.particleLimit;
-                   b.setMessage(Component.literal("Particle Limit: " + on(FPSBoostConfig.particleLimit))); })
-            .bounds(cx - BW/2, y, HBW, BH).build());
-        addRenderableWidget(new AbstractSliderButton(cx - BW/2 + HBW + 10, y, HBW, BH,
+        addToggle("Block Entity Culling", FPSBoostConfig.blockEntityCulling,
+            v -> FPSBoostConfig.blockEntityCulling = v, cx, y, HW, BH);
+        addRenderableWidget(new AbstractSliderButton(cx - BW/2 + HW + 10, y, HW, BH,
+            Component.literal("BE Dist: " + FPSBoostConfig.blockEntityRenderDist + "b"),
+            (FPSBoostConfig.blockEntityRenderDist - 8.0) / (128.0 - 8.0)) {
+            @Override protected void updateMessage() {
+                int v = (int)(8 + value * (128-8));
+                FPSBoostConfig.blockEntityRenderDist = v;
+                setMessage(Component.literal("BE Dist: " + v + "b"));
+            }
+            @Override protected void applyValue() { updateMessage(); }
+        }); y += GAP;
+
+        addToggle("Skip Underground Sky/Weather/Clouds", FPSBoostConfig.skipUnderground,
+            v -> FPSBoostConfig.skipUnderground = v, cx, y, BW, BH); y += GAP;
+
+        addToggle("Particle Limit", FPSBoostConfig.particleLimit,
+            v -> FPSBoostConfig.particleLimit = v, cx, y, HW, BH);
+        addRenderableWidget(new AbstractSliderButton(cx - BW/2 + HW + 10, y, HW, BH,
             Component.literal("Max: " + FPSBoostConfig.maxParticles),
             (FPSBoostConfig.maxParticles - 100.0) / (5000.0 - 100.0)) {
             @Override protected void updateMessage() {
-                int v = (int)(100 + this.value * (5000 - 100));
+                int v = (int)(100 + value * (5000-100));
                 FPSBoostConfig.maxParticles = v;
                 setMessage(Component.literal("Max: " + v));
             }
             @Override protected void applyValue() { updateMessage(); }
         }); y += GAP;
 
-        // Save CPU when unfocused
-        addRenderableWidget(Button.builder(
-            Component.literal("Save CPU Unfocused: " + on(FPSBoostConfig.skipUnfocused)),
-            b -> { FPSBoostConfig.skipUnfocused = !FPSBoostConfig.skipUnfocused;
-                   b.setMessage(Component.literal("Save CPU Unfocused: " + on(FPSBoostConfig.skipUnfocused))); })
-            .bounds(cx - BW/2, y, BW, BH).build()); y += GAP;
+        addToggle("Save CPU Unfocused", FPSBoostConfig.skipUnfocused,
+            v -> FPSBoostConfig.skipUnfocused = v, cx, y, BW, BH); y += GAP;
 
-        // Extended render distance toggle
-        addRenderableWidget(Button.builder(
-            Component.literal("Extended Render Dist: " + on(FPSBoostConfig.extendedRender)),
-            b -> { FPSBoostConfig.extendedRender = !FPSBoostConfig.extendedRender;
-                   FPSBoostConfig.applyRenderDistance();
-                   b.setMessage(Component.literal("Extended Render Dist: " + on(FPSBoostConfig.extendedRender))); })
-            .bounds(cx - BW/2, y, BW, BH).build()); y += GAP;
+        addToggle("Extended Render Distance", FPSBoostConfig.extendedRender, v -> {
+            FPSBoostConfig.extendedRender = v;
+            FPSBoostConfig.applyRenderDistance();
+        }, cx, y, BW, BH); y += GAP;
 
-        // Render distance slider (2–64 chunks)
         addRenderableWidget(new AbstractSliderButton(cx - BW/2, y, BW, BH,
             Component.literal("Render Dist: " + FPSBoostConfig.extendRenderDist + " chunks"),
             (FPSBoostConfig.extendRenderDist - 2.0) / (64.0 - 2.0)) {
             @Override protected void updateMessage() {
-                int v = (int)(2 + this.value * (64 - 2));
+                int v = (int)(2 + value * (64-2));
                 FPSBoostConfig.extendRenderDist = v;
                 setMessage(Component.literal("Render Dist: " + v + " chunks"));
             }
@@ -82,27 +77,33 @@ public class FPSBoostScreen extends Screen {
             }
         }); y += GAP;
 
-        // Dynamic render distance toggle + target FPS slider
-        addRenderableWidget(Button.builder(
-            Component.literal("Dynamic RD: " + on(FPSBoostConfig.dynamicRender)),
-            b -> { FPSBoostConfig.dynamicRender = !FPSBoostConfig.dynamicRender;
-                   b.setMessage(Component.literal("Dynamic RD: " + on(FPSBoostConfig.dynamicRender))); })
-            .bounds(cx - BW/2, y, HBW, BH).build());
-        addRenderableWidget(new AbstractSliderButton(cx - BW/2 + HBW + 10, y, HBW, BH,
+        addToggle("Dynamic Render Distance", FPSBoostConfig.dynamicRender,
+            v -> FPSBoostConfig.dynamicRender = v, cx, y, HW, BH);
+        addRenderableWidget(new AbstractSliderButton(cx - BW/2 + HW + 10, y, HW, BH,
             Component.literal("Target: " + FPSBoostConfig.targetFps + " FPS"),
             (FPSBoostConfig.targetFps - 20.0) / (240.0 - 20.0)) {
             @Override protected void updateMessage() {
-                int v = (int)(20 + this.value * (240 - 20));
+                int v = (int)(20 + value * (240-20));
                 FPSBoostConfig.targetFps = v;
                 setMessage(Component.literal("Target: " + v + " FPS"));
             }
             @Override protected void applyValue() { updateMessage(); }
         }); y += GAP + 4;
 
-        // Save + Done
         addRenderableWidget(Button.builder(Component.literal("Save & Close"),
-            b -> { FPSBoostConfig.save(); this.minecraft.setScreen(parent); })
+            b -> { FPSBoostConfig.save(); minecraft.setScreen(parent); })
             .bounds(cx - BW/2, y, BW, BH).build());
+    }
+
+    private interface BoolConsumer { void accept(boolean v); }
+    private void addToggle(String label, boolean initial, BoolConsumer onChange,
+                           int cx, int y, int bw, int bh) {
+        addRenderableWidget(Button.builder(
+            Component.literal(label + ": " + on(initial)), b -> {
+                boolean nv = !b.getMessage().getString().endsWith("ON");
+                onChange.accept(nv);
+                b.setMessage(Component.literal(label + ": " + on(nv)));
+            }).bounds(cx - 110, y, bw, bh).build());
     }
 
     private static String on(boolean b) { return b ? "§aON§r" : "§cOFF§r"; }
@@ -110,12 +111,17 @@ public class FPSBoostScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mx, int my, float dt) {
         renderBackground(g, mx, my, dt);
-        g.drawCenteredString(font, title, width/2, 16, 0xFFFFFF);
+        g.drawCenteredString(font, title, width/2, 12, 0xFFFFFF);
         int fps = Minecraft.getInstance().getFps();
-        String fpsColor = fps >= 60 ? "§a" : fps >= 30 ? "§e" : "§c";
+        String col = fps >= 300 ? "§b" : fps >= 120 ? "§a" : fps >= 60 ? "§e" : "§c";
         g.drawCenteredString(font,
-            Component.literal("Current FPS: " + fpsColor + fps + "§r  |  Press K to toggle"),
-            width/2, 30, 0xAAAAAA);
+            Component.literal("FPS: " + col + fps + "§r  |  K = toggle  |  v3.0"),
+            width/2, 27, 0xAAAAAA);
+        boolean ug = FPSBoostConfig.isUnderground();
+        g.drawCenteredString(font,
+            Component.literal(ug ? "§7Underground — sky/weather/clouds skipped§r"
+                                 : "§7Above ground§r"),
+            width/2, 40, 0xAAAAAA);
         super.render(g, mx, my, dt);
     }
 
