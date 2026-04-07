@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1, "id": "fpsboost", "version": "3.0.1",
-  "name": "FPSBoost", "environment": "client",
-  "entrypoints": {"client": ["com.fpsboost.FPSBoostMod"]},
-  "mixins": ["fpsboost.mixins.json"],
-  "depends": {"fabricloader": ">=0.15.0","fabric-api":"*","minecraft":">=1.21"}
+  "schemaVersion":1,"id":"fpsboost","version":"4.0.0",
+  "name":"FPSBoost","environment":"client",
+  "entrypoints":{"client":["com.fpsboost.FPSBoostMod"]},
+  "mixins":["fpsboost.mixins.json"],
+  "depends":{"fabricloader":">=0.15.0","fabric-api":"*","minecraft":">=1.21"}
 }
