@@ -9,29 +9,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.client.particle.ParticleEngine")
 public class ParticleEngineMixin {
-
     private static int fpsboost$count = 0;
     private static long fpsboost$resetAt = 0L;
 
-    /**
-     * Cap particle creation.
-     * Confirmed from 1.21.11 mappings: void add(net.minecraft.client.particle.Particle)
-     */
     @Inject(method = "add(Lnet/minecraft/client/particle/Particle;)V",
-            at = @At("HEAD"),
-            cancellable = true)
+            at = @At("HEAD"), cancellable = true)
     private void fpsboost$limitParticles(Particle particle, CallbackInfo ci) {
         if (!FPSBoostConfig.enabled || !FPSBoostConfig.particleLimit) return;
-
         long now = System.currentTimeMillis();
-        if (now - fpsboost$resetAt >= 1000L) {
-            fpsboost$count = 0;
-            fpsboost$resetAt = now;
-        }
-        if (fpsboost$count >= FPSBoostConfig.maxParticles) {
-            ci.cancel();
-        } else {
-            fpsboost$count++;
-        }
+        if (now - fpsboost$resetAt >= 1000L) { fpsboost$count = 0; fpsboost$resetAt = now; }
+        if (fpsboost$count >= FPSBoostConfig.maxParticles) ci.cancel();
+        else fpsboost$count++;
     }
 }
