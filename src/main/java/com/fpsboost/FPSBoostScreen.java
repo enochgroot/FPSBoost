@@ -6,147 +6,70 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class FPSBoostScreen extends Screen {
-
     private final Screen parent;
     private final int page;
 
     public FPSBoostScreen(Screen parent) { this(parent, 0); }
-
     public FPSBoostScreen(Screen parent, int page) {
-        super(Component.literal("FPSBoost v5"));
-        this.parent = parent;
-        this.page = page;
+        super(Component.literal("FPSBoost v5.1"));
+        this.parent = parent; this.page = page;
     }
 
     @Override
     protected void init() {
-        int cx = this.width / 2;
-        int y = 46;
+        int cx = this.width / 2, y = 46;
         final int W = 220, H = 20, G = 22;
 
         if (page == 0) {
-            addRenderableWidget(Button.builder(
-                Component.literal("FPSBoost: " + on(FPSBoostConfig.enabled)),
-                b -> { FPSBoostConfig.enabled = !FPSBoostConfig.enabled;
-                       b.setMessage(Component.literal("FPSBoost: " + on(FPSBoostConfig.enabled))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Entity Culling: " + on(FPSBoostConfig.entityCulling)),
-                b -> { FPSBoostConfig.entityCulling = !FPSBoostConfig.entityCulling;
-                       b.setMessage(Component.literal("Entity Culling: " + on(FPSBoostConfig.entityCulling))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Entity LOD: " + on(FPSBoostConfig.entityLOD)),
-                b -> { FPSBoostConfig.entityLOD = !FPSBoostConfig.entityLOD;
-                       b.setMessage(Component.literal("Entity LOD: " + on(FPSBoostConfig.entityLOD))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("No Shadows: " + on(FPSBoostConfig.noShadows)),
-                b -> { FPSBoostConfig.noShadows = !FPSBoostConfig.noShadows;
-                       b.setMessage(Component.literal("No Shadows: " + on(FPSBoostConfig.noShadows))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("No Nametags: " + on(FPSBoostConfig.noNameTags)),
-                b -> { FPSBoostConfig.noNameTags = !FPSBoostConfig.noNameTags;
-                       b.setMessage(Component.literal("No Nametags: " + on(FPSBoostConfig.noNameTags))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Block Entity Culling: " + on(FPSBoostConfig.blockEntityCulling)),
-                b -> { FPSBoostConfig.blockEntityCulling = !FPSBoostConfig.blockEntityCulling;
-                       b.setMessage(Component.literal("Block Entity Culling: " + on(FPSBoostConfig.blockEntityCulling))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Skip Underground Sky: " + on(FPSBoostConfig.skipUnderground)),
-                b -> { FPSBoostConfig.skipUnderground = !FPSBoostConfig.skipUnderground;
-                       b.setMessage(Component.literal("Skip Underground Sky: " + on(FPSBoostConfig.skipUnderground))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("No Clouds: " + on(FPSBoostConfig.noClouds)),
-                b -> { FPSBoostConfig.noClouds = !FPSBoostConfig.noClouds;
-                       b.setMessage(Component.literal("No Clouds: " + on(FPSBoostConfig.noClouds))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Smart Sky: " + on(FPSBoostConfig.smartSky)),
-                b -> { FPSBoostConfig.smartSky = !FPSBoostConfig.smartSky;
-                       b.setMessage(Component.literal("Smart Sky: " + on(FPSBoostConfig.smartSky))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
+            addBtn(cx, y, W, H, "FPSBoost", FPSBoostConfig.enabled,
+                () -> FPSBoostConfig.enabled = !FPSBoostConfig.enabled); y += G;
+            addBtn(cx, y, W, H, "Entity Culling", FPSBoostConfig.entityCulling,
+                () -> FPSBoostConfig.entityCulling = !FPSBoostConfig.entityCulling); y += G;
+            addBtn(cx, y, W, H, "Entity LOD", FPSBoostConfig.entityLOD,
+                () -> FPSBoostConfig.entityLOD = !FPSBoostConfig.entityLOD); y += G;
+            addBtn(cx, y, W, H, "No Shadows", FPSBoostConfig.noShadows,
+                () -> FPSBoostConfig.noShadows = !FPSBoostConfig.noShadows); y += G;
+            addBtn(cx, y, W, H, "No Nametags", FPSBoostConfig.noNameTags,
+                () -> FPSBoostConfig.noNameTags = !FPSBoostConfig.noNameTags); y += G;
+            addBtn(cx, y, W, H, "Block Entity Culling", FPSBoostConfig.blockEntityCulling,
+                () -> FPSBoostConfig.blockEntityCulling = !FPSBoostConfig.blockEntityCulling); y += G;
+            addBtn(cx, y, W, H, "Skip Underground Sky", FPSBoostConfig.skipUnderground,
+                () -> FPSBoostConfig.skipUnderground = !FPSBoostConfig.skipUnderground); y += G;
+            addBtn(cx, y, W, H, "No Clouds", FPSBoostConfig.noClouds,
+                () -> FPSBoostConfig.noClouds = !FPSBoostConfig.noClouds); y += G;
+            addBtn(cx, y, W, H, "Smart Sky", FPSBoostConfig.smartSky,
+                () -> FPSBoostConfig.smartSky = !FPSBoostConfig.smartSky); y += G;
             addRenderableWidget(Button.builder(Component.literal("Next Page >>"),
                 b -> this.minecraft.setScreen(new FPSBoostScreen(parent, 1)))
                 .bounds(cx - W/2, y, W, H).build());
-
         } else {
-            addRenderableWidget(Button.builder(
-                Component.literal("No View Bob: " + on(FPSBoostConfig.noViewBob)),
-                b -> { FPSBoostConfig.noViewBob = !FPSBoostConfig.noViewBob;
-                       b.setMessage(Component.literal("No View Bob: " + on(FPSBoostConfig.noViewBob))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("No Hand Model: " + on(FPSBoostConfig.noHand)),
-                b -> { FPSBoostConfig.noHand = !FPSBoostConfig.noHand;
-                       b.setMessage(Component.literal("No Hand Model: " + on(FPSBoostConfig.noHand))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Light Throttle: " + on(FPSBoostConfig.lightThrottle)),
-                b -> { FPSBoostConfig.lightThrottle = !FPSBoostConfig.lightThrottle;
-                       b.setMessage(Component.literal("Light Throttle: " + on(FPSBoostConfig.lightThrottle))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Particle Limit: " + on(FPSBoostConfig.particleLimit)),
-                b -> { FPSBoostConfig.particleLimit = !FPSBoostConfig.particleLimit;
-                       b.setMessage(Component.literal("Particle Limit: " + on(FPSBoostConfig.particleLimit))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Save CPU Unfocused: " + on(FPSBoostConfig.skipUnfocused)),
-                b -> { FPSBoostConfig.skipUnfocused = !FPSBoostConfig.skipUnfocused;
-                       b.setMessage(Component.literal("Save CPU Unfocused: " + on(FPSBoostConfig.skipUnfocused))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Extended Render Dist: " + on(FPSBoostConfig.extendedRender)),
-                b -> { FPSBoostConfig.extendedRender = !FPSBoostConfig.extendedRender;
-                       FPSBoostConfig.applyRenderDistance();
-                       b.setMessage(Component.literal("Extended Render Dist: " + on(FPSBoostConfig.extendedRender))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(
-                Component.literal("Dynamic Render Dist: " + on(FPSBoostConfig.dynamicRender)),
-                b -> { FPSBoostConfig.dynamicRender = !FPSBoostConfig.dynamicRender;
-                       b.setMessage(Component.literal("Dynamic Render Dist: " + on(FPSBoostConfig.dynamicRender))); })
-                .bounds(cx - W/2, y, W, H).build()); y += G;
-
-            addRenderableWidget(Button.builder(Component.literal("*** MAX FPS PRESET ***"),
-                b -> {
-                    FPSBoostConfig.enabled = true;
-                    FPSBoostConfig.entityCulling = true;
-                    FPSBoostConfig.entityLOD = true;
-                    FPSBoostConfig.noShadows = true;
-                    FPSBoostConfig.noNameTags = true;
-                    FPSBoostConfig.blockEntityCulling = true;
-                    FPSBoostConfig.skipUnderground = true;
-                    FPSBoostConfig.noClouds = true;
-                    FPSBoostConfig.smartSky = true;
-                    FPSBoostConfig.noViewBob = true;
-                    FPSBoostConfig.noHand = true;
-                    FPSBoostConfig.lightThrottle = true;
-                    FPSBoostConfig.particleLimit = true;
-                    FPSBoostConfig.maxParticles = 100;
-                    FPSBoostConfig.save();
-                    this.minecraft.setScreen(new FPSBoostScreen(parent, 1));
-                }).bounds(cx - W/2, y, W, H).build()); y += G;
-
+            addBtn(cx, y, W, H, "No View Bob", FPSBoostConfig.noViewBob,
+                () -> FPSBoostConfig.noViewBob = !FPSBoostConfig.noViewBob); y += G;
+            addBtn(cx, y, W, H, "No Hand Model", FPSBoostConfig.noHand,
+                () -> FPSBoostConfig.noHand = !FPSBoostConfig.noHand); y += G;
+            addBtn(cx, y, W, H, "Light Throttle" + (FPSBoostMod.VULKAN_PRESENT ? " [N/A-Vulkan]" : ""),
+                FPSBoostConfig.lightThrottle,
+                () -> FPSBoostConfig.lightThrottle = !FPSBoostConfig.lightThrottle); y += G;
+            addBtn(cx, y, W, H, "Particle Limit", FPSBoostConfig.particleLimit,
+                () -> FPSBoostConfig.particleLimit = !FPSBoostConfig.particleLimit); y += G;
+            addBtn(cx, y, W, H, "Save CPU Unfocused", FPSBoostConfig.skipUnfocused,
+                () -> FPSBoostConfig.skipUnfocused = !FPSBoostConfig.skipUnfocused); y += G;
+            addBtn(cx, y, W, H, "Extended Render Dist", FPSBoostConfig.extendedRender,
+                () -> { FPSBoostConfig.extendedRender = !FPSBoostConfig.extendedRender;
+                        FPSBoostConfig.applyRenderDistance(); }); y += G;
+            addBtn(cx, y, W, H, "Dynamic Render Dist", FPSBoostConfig.dynamicRender,
+                () -> FPSBoostConfig.dynamicRender = !FPSBoostConfig.dynamicRender); y += G;
+            addRenderableWidget(Button.builder(Component.literal("*** MAX FPS PRESET ***"), b -> {
+                FPSBoostConfig.enabled=true; FPSBoostConfig.entityCulling=true;
+                FPSBoostConfig.entityLOD=true; FPSBoostConfig.noShadows=true;
+                FPSBoostConfig.noNameTags=true; FPSBoostConfig.blockEntityCulling=true;
+                FPSBoostConfig.skipUnderground=true; FPSBoostConfig.noClouds=true;
+                FPSBoostConfig.smartSky=true; FPSBoostConfig.noViewBob=true;
+                FPSBoostConfig.noHand=true; FPSBoostConfig.lightThrottle=true;
+                FPSBoostConfig.particleLimit=true; FPSBoostConfig.maxParticles=100;
+                FPSBoostConfig.save();
+                this.minecraft.setScreen(new FPSBoostScreen(parent, 1));
+            }).bounds(cx - W/2, y, W, H).build()); y += G;
             addRenderableWidget(Button.builder(Component.literal("<< Back"),
                 b -> this.minecraft.setScreen(new FPSBoostScreen(parent, 0)))
                 .bounds(cx - W/2, y, (W/2) - 2, H).build());
@@ -156,21 +79,24 @@ public class FPSBoostScreen extends Screen {
         }
     }
 
-    private static String on(boolean b) { return b ? "ON" : "OFF"; }
-
-    @Override
-    public void render(GuiGraphics g, int mx, int my, float dt) {
-        // DO NOT call renderBackground() here!
-        // In MC 1.21.11 the framework calls it automatically before render().
-        // Calling it again = "Can only blur once per frame" crash.
-        int fps = this.minecraft.getFps();
-        String c = fps >= 500 ? "§5" : fps >= 300 ? "§d" : fps >= 200 ? "§b" : fps >= 120 ? "§a" : fps >= 60 ? "§e" : "§c";
-        g.drawCenteredString(font, "FPSBoost v5  |  " + c + fps + " FPS  |  Page " + (page + 1) + "/2",
-            width / 2, 16, 0xFFFFFF);
-        g.drawCenteredString(font, "K = close  |  MAX FPS PRESET on page 2", width / 2, 30, 0x888888);
-        super.render(g, mx, my, dt);
+    private void addBtn(int cx, int y, int w, int h, String lbl, boolean cur, Runnable run) {
+        addRenderableWidget(Button.builder(
+            Component.literal(lbl + ": " + (cur ? "ON" : "OFF")), b -> {
+                run.run();
+                // re-read the field to get updated value
+                b.setMessage(Component.literal(lbl + ": " + (b.getMessage().getString().endsWith("OFF") ? "ON" : "OFF")));
+            }).bounds(cx - w/2, y, w, h).build());
     }
 
     @Override
-    public boolean isPauseScreen() { return false; }
+    public void render(GuiGraphics g, int mx, int my, float dt) {
+        int fps = this.minecraft.getFps();
+        String c = fps>=500?"\u00a75":fps>=300?"\u00a7d":fps>=200?"\u00a7b":fps>=120?"\u00a7a":fps>=60?"\u00a7e":"\u00a7c";
+        g.drawCenteredString(font, "FPSBoost v5.1  |  " + c + fps + " FPS  |  pg " + (page+1) + "/2", width/2, 14, 0xFFFFFF);
+        String mode = FPSBoostMod.VULKAN_PRESENT ? "\u00a7dVulkan Mode\u00a7r — entity/particle opts active" : "K=menu  J=toggle  MAX FPS on pg2";
+        g.drawCenteredString(font, mode, width/2, 28, 0x888888);
+        super.render(g, mx, my, dt);
+    }
+
+    @Override public boolean isPauseScreen() { return false; }
 }
