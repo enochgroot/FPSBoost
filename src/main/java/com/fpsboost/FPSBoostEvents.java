@@ -1,12 +1,9 @@
 package com.fpsboost;
 
-import com.fpsboost.mixin.EntityRenderDispatcherMixin;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-
+// Frustum capture is handled directly in EntityRenderDispatcherMixin
+// This class reserved for future event registrations
 public class FPSBoostEvents {
     public static void register() {
-        WorldRenderEvents.AFTER_SETUP.register(ctx -> {
-            EntityRenderDispatcherMixin.currentFrustum = ctx.frustum();
-        });
+        // No-op for now — entity culling uses mixin-internal frustum capture
     }
 }
