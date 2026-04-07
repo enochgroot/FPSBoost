@@ -1,0 +1,7 @@
+{
+  "required": false,
+  "package": "com.fpsboost.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["EntityRenderDispatcherMixin"],
+  "injectors": {"defaultRequire": 0}
+}
