@@ -7,26 +7,28 @@ import java.io.*;
 import java.nio.file.*;
 
 public class FPSBoostConfig {
-    // Toggles
-    public static boolean enabled         = true;
-    public static boolean entityCulling   = true;
-    public static boolean particleLimit   = true;
-    public static boolean skipUnfocused   = true;
-    public static boolean extendedRender  = false;
-    public static boolean dynamicRender   = false;
+    public static boolean enabled               = true;
+    public static boolean entityCulling         = true;
+    public static boolean particleLimit         = true;
+    public static boolean skipUnfocused         = true;
+    public static boolean extendedRender        = false;
+    public static boolean dynamicRender         = false;
+    public static boolean blockEntityCulling    = true;
+    public static boolean skipUnderground       = true;
 
-    // Values
-    public static int extendRenderDist = 48;
-    public static int maxParticles     = 1000;
-    public static int targetFps        = 60;
+    public static int extendRenderDist      = 48;
+    public static int maxParticles          = 1000;
+    public static int targetFps             = 60;
+    public static int blockEntityRenderDist = 64;
 
     private static int savedRenderDist = -1;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    // --- SAVE / LOAD ---
     private record Data(boolean enabled, boolean entityCulling, boolean particleLimit,
                         boolean skipUnfocused, boolean extendedRender, boolean dynamicRender,
-                        int extendRenderDist, int maxParticles, int targetFps) {}
+                        boolean blockEntityCulling, boolean skipUnderground,
+                        int extendRenderDist, int maxParticles, int targetFps,
+                        int blockEntityRenderDist) {}
 
     public static void save() {
         try {
@@ -35,8 +37,8 @@ public class FPSBoostConfig {
             Path cfg = mc.gameDirectory.toPath().resolve("config/fpsboost.json");
             Files.createDirectories(cfg.getParent());
             Files.writeString(cfg, GSON.toJson(new Data(enabled, entityCulling, particleLimit,
-                skipUnfocused, extendedRender, dynamicRender,
-                extendRenderDist, maxParticles, targetFps)));
+                skipUnfocused, extendedRender, dynamicRender, blockEntityCulling, skipUnderground,
+                extendRenderDist, maxParticles, targetFps, blockEntityRenderDist)));
         } catch (Exception e) { System.err.println("[FPSBoost] Save failed: " + e.getMessage()); }
     }
 
@@ -51,12 +53,12 @@ public class FPSBoostConfig {
             enabled = d.enabled(); entityCulling = d.entityCulling();
             particleLimit = d.particleLimit(); skipUnfocused = d.skipUnfocused();
             extendedRender = d.extendedRender(); dynamicRender = d.dynamicRender();
+            blockEntityCulling = d.blockEntityCulling(); skipUnderground = d.skipUnderground();
             extendRenderDist = d.extendRenderDist(); maxParticles = d.maxParticles();
-            targetFps = d.targetFps();
+            targetFps = d.targetFps(); blockEntityRenderDist = d.blockEntityRenderDist();
         } catch (Exception e) { System.err.println("[FPSBoost] Load failed: " + e.getMessage()); }
     }
 
-    // --- RENDER DISTANCE ---
     public static void applyRenderDistance() {
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.options == null) return;
@@ -71,14 +73,13 @@ public class FPSBoostConfig {
         }
     }
 
-    // Called each tick for dynamic render distance adjustment
     private static int dynamicCooldown = 0;
     public static void tickDynamic() {
         if (!enabled || !dynamicRender) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.level == null) return;
         if (--dynamicCooldown > 0) return;
-        dynamicCooldown = 40; // check every 2 seconds
+        dynamicCooldown = 40;
         int fps = mc.getFps();
         int current = mc.options.renderDistance().get();
         if (fps < targetFps - 5 && current > 2) {
@@ -86,10 +87,15 @@ public class FPSBoostConfig {
             mc.levelRenderer.needsUpdate();
         } else if (fps > targetFps + 10) {
             int cap = extendedRender ? extendRenderDist : 32;
-            if (current < cap) {
-                mc.options.renderDistance().set(current + 2);
-                mc.levelRenderer.needsUpdate();
-            }
+            if (current < cap) { mc.options.renderDistance().set(current + 2); mc.levelRenderer.needsUpdate(); }
         }
+    }
+
+    public static boolean isUnderground() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc == null || mc.level == null || mc.player == null) return false;
+        // Sky light = 0 means no sky access (underground, covered, etc.)
+        return mc.level.getBrightness(net.minecraft.world.level.LightLayer.SKY,
+            mc.player.blockPosition()) == 0;
     }
 }
