@@ -7,15 +7,17 @@ import net.minecraft.client.KeyMapping;
 
 public class FPSBoostMod implements ClientModInitializer {
     public static KeyMapping configKey;
-    private boolean loaded=false;
-    @Override public void onInitializeClient(){
-        configKey=KeyBindingHelper.registerKeyBinding(new KeyMapping("key.fpsboost.config",75,KeyMapping.Category.MISC));
-        ClientTickEvents.END_CLIENT_TICK.register(c->{
-            if(c.level!=null&&!loaded){FPSBoostConfig.load();if(FPSBoostConfig.extendedRender)FPSBoostConfig.applyRenderDistance();loaded=true;}
-            if(configKey.consumeClick())c.setScreen(new FPSBoostScreen(c.screen));
-            if(FPSBoostConfig.skipUnfocused&&c.level!=null&&!c.isWindowActive()){try{Thread.sleep(100);}catch(InterruptedException i){}}
-            FPSBoostConfig.tickDynamic();
+
+    @Override
+    public void onInitializeClient() {
+        configKey = KeyBindingHelper.registerKeyBinding(
+            new KeyMapping("key.fpsboost.config", 75, KeyMapping.Category.MISC)
+        );
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (configKey.consumeClick()) {
+                client.setScreen(new FPSBoostScreen(client.screen));
+            }
         });
-        System.out.println("[FPSBoost] v5.0.0 — K to open");
+        System.out.println("[FPSBoost] DIAGNOSTIC build loaded - press K");
     }
 }
