@@ -1,5 +1,5 @@
 {
-  "schemaVersion":1,"id":"fpsboost","version":"5.0.4",
+  "schemaVersion":1,"id":"fpsboost","version":"5.1.0",
   "name":"FPSBoost","environment":"client",
   "entrypoints":{"client":["com.fpsboost.FPSBoostMod"]},
   "mixins":["fpsboost.mixins.json"],
