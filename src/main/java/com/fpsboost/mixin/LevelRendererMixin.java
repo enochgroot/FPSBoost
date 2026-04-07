@@ -15,16 +15,19 @@ public class LevelRendererMixin {
         if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) ci.cancel();
     }
 
+    /**
+     * Smart sky: skip sky rendering when:
+     * - Underground (skipUnderground), OR
+     * - Player is looking down >30 degrees (smartSky)
+     * Sun/moon/star geometry is irrelevant when you can't see the sky.
+     */
     @Inject(method = "addSkyPass", at = @At("HEAD"), cancellable = true)
     private void fpsboost$skipSky(CallbackInfo ci) {
         if (!FPSBoostConfig.enabled) return;
-        if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) ci.cancel();
+        if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) { ci.cancel(); return; }
+        if (FPSBoostConfig.smartSky && FPSBoostConfig.isLookingDown()) ci.cancel();
     }
 
-    /**
-     * Skip clouds: always if noClouds=true, OR underground if skipUnderground=true.
-     * CloudRenderer.render does GPU buffer builds for cloud geometry — expensive.
-     */
     @Inject(method = "addCloudsPass", at = @At("HEAD"), cancellable = true)
     private void fpsboost$skipClouds(CallbackInfo ci) {
         if (!FPSBoostConfig.enabled) return;
