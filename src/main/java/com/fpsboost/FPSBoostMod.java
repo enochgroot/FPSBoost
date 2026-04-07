@@ -11,16 +11,15 @@ public class FPSBoostMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // 3-arg KeyMapping(name, keyCode, category) — keyCode 75 = GLFW K
+        // In 1.21.11 KeyMapping(name, keyCode, Category) — use MISC static category
         configKey = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping("key.fpsboost.config", 75, "key.categories.misc")
+            new KeyMapping("key.fpsboost.config", 75, KeyMapping.Category.MISC)
         );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (configKey.consumeClick()) {
                 client.setScreen(new FPSBoostScreen(client.screen));
             }
-            // Save CPU when window not focused
             if (FPSBoostConfig.skipUnfocused && client.level != null && !client.isWindowActive()) {
                 try { Thread.sleep(100); } catch (InterruptedException ignored) {}
             }
