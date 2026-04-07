@@ -1,2 +1,2 @@
 package com.fpsboost;
-public class FPSBoostEvents{public static void register(){}}
+public class FPSBoostEvents {}
