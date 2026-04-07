@@ -9,14 +9,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "net.minecraft.client.renderer.GameRenderer")
 public class GameRendererMixin {
 
-    /**
-     * Cancel view bobbing when noViewBob is ON.
-     * bobView calculates walking camera sway per frame — minor but free.
-     * Confirmed in 1.21.11 mappings: void bobView(PoseStack, float)
-     * Note: bobHurt (damage shake) is a different method and is NOT cancelled.
-     */
+    /** No view bob — skip camera sway calculation every frame */
     @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
     private void fpsboost$noViewBob(CallbackInfo ci) {
         if (FPSBoostConfig.enabled && FPSBoostConfig.noViewBob) ci.cancel();
+    }
+
+    /**
+     * No hand model — skip the entire hand+item render pass.
+     * renderItemInHand renders the held item model with lighting/transforms.
+     * Confirmed in 1.21.11 mappings: void renderItemInHand(float, boolean, Matrix4f)
+     * Using just (CallbackInfo ci) — Mixin allows omitting trailing params.
+     */
+    @Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
+    private void fpsboost$noHand(CallbackInfo ci) {
+        if (FPSBoostConfig.enabled && FPSBoostConfig.noHand) ci.cancel();
     }
 }
