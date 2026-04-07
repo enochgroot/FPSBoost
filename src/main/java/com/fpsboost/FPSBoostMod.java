@@ -1,10 +1,10 @@
 package com.fpsboost;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
-import com.mojang.blaze3d.platform.InputConstants;
 
 public class FPSBoostMod implements ClientModInitializer {
     public static final String MOD_ID = "fpsboost";
@@ -12,21 +12,20 @@ public class FPSBoostMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Register keybind: K to open config screen
+        // KeyMapping in 1.21.11: (name, InputConstants.Type, keyCode, category)
+        // GLFW key K = 75
         configKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.fpsboost.config",
-            InputConstants.KEY_K,
+            InputConstants.Type.KEYSYM,
+            75,
             "key.categories.fpsboost"
         ));
-
-        // Register world render event for frustum capture
-        FPSBoostEvents.register();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (configKey.consumeClick()) {
                 client.setScreen(new FPSBoostScreen(client.screen));
             }
-            // Save CPU when window is not focused
+            // Save CPU when window not focused
             if (FPSBoostConfig.skipUnfocused && client.level != null && !client.isWindowActive()) {
                 try { Thread.sleep(100); } catch (InterruptedException ignored) {}
             }
