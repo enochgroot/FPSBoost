@@ -13,5 +13,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - run: ./gradlew --no-build-cache build
-      - uses: actions/upload-artifact@v4
-        with: {name: fpsboost-1.0.0-MC1.21.11, path: build/libs/fpsboost-1.0.0.jar}
+      - run: ls -lh build/libs/
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: fpsboost-MC1.21.11
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+            !build/libs/*-dev.jar
+          if-no-files-found: warn
