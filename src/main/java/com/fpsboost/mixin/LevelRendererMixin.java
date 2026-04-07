@@ -9,35 +9,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "net.minecraft.client.renderer.LevelRenderer")
 public class LevelRendererMixin {
 
-    /**
-     * Skip weather (rain/snow) when player is underground.
-     * Rain/snow is expensive: per-column geometry + particle spawning.
-     * Confirmed method from 1.21.11 mappings: addWeatherPass(FrameGraphBuilder, GpuBufferSlice)
-     */
     @Inject(method = "addWeatherPass", at = @At("HEAD"), cancellable = true)
     private void fpsboost$skipWeather(CallbackInfo ci) {
-        if (!FPSBoostConfig.enabled || !FPSBoostConfig.skipUnderground) return;
-        if (FPSBoostConfig.isUnderground()) ci.cancel();
+        if (!FPSBoostConfig.enabled) return;
+        if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) ci.cancel();
     }
 
-    /**
-     * Skip sky rendering when underground (no sky visible).
-     * Sky geometry + sun/moon/star calculations.
-     * Confirmed method from 1.21.11 mappings: addSkyPass(FrameGraphBuilder, Camera, GpuBufferSlice)
-     */
     @Inject(method = "addSkyPass", at = @At("HEAD"), cancellable = true)
     private void fpsboost$skipSky(CallbackInfo ci) {
-        if (!FPSBoostConfig.enabled || !FPSBoostConfig.skipUnderground) return;
-        if (FPSBoostConfig.isUnderground()) ci.cancel();
+        if (!FPSBoostConfig.enabled) return;
+        if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) ci.cancel();
     }
 
     /**
-     * Skip cloud rendering when underground.
-     * Confirmed method from 1.21.11 mappings: addCloudsPass(FrameGraphBuilder, CloudStatus, Vec3)
+     * Skip clouds: always if noClouds=true, OR underground if skipUnderground=true.
+     * CloudRenderer.render does GPU buffer builds for cloud geometry — expensive.
      */
     @Inject(method = "addCloudsPass", at = @At("HEAD"), cancellable = true)
     private void fpsboost$skipClouds(CallbackInfo ci) {
-        if (!FPSBoostConfig.enabled || !FPSBoostConfig.skipUnderground) return;
-        if (FPSBoostConfig.isUnderground()) ci.cancel();
+        if (!FPSBoostConfig.enabled) return;
+        if (FPSBoostConfig.noClouds) { ci.cancel(); return; }
+        if (FPSBoostConfig.skipUnderground && FPSBoostConfig.isUnderground()) ci.cancel();
     }
 }
