@@ -12,7 +12,7 @@ jobs:
       - run: ls -lh build/libs/
       - uses: actions/upload-artifact@v4
         with:
-          name: fpsboost-v5.0.1-MC1.21.11
+          name: fpsboost-v5.0.3-MC1.21.11
           path: |
             build/libs/*.jar
             !build/libs/*-sources.jar
