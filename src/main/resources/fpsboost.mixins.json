@@ -2,6 +2,11 @@
   "required": false,
   "package": "com.fpsboost.mixin",
   "compatibilityLevel": "JAVA_21",
-  "client": ["EntityRenderDispatcherMixin", "ParticleEngineMixin"],
+  "client": [
+    "EntityRenderDispatcherMixin",
+    "ParticleEngineMixin",
+    "LevelRendererMixin",
+    "BlockEntityCullMixin"
+  ],
   "injectors": {"defaultRequire": 0}
 }
