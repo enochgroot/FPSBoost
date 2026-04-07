@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "fpsboost",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "FPSBoost",
-  "description": "FPS optimizer + entity culling + extended render distance for Fabric 1.21.11",
+  "description": "FPS optimizer v2: entity culling, particle cap, dynamic render distance, config persistence",
   "environment": "client",
   "entrypoints": {"client": ["com.fpsboost.FPSBoostMod"]},
   "mixins": ["fpsboost.mixins.json"],
