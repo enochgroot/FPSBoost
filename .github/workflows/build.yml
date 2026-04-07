@@ -1,0 +1,17 @@
+name: Build FPSBoost
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {java-version: "21", distribution: "temurin"}
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      - run: ./gradlew --no-build-cache build
+      - uses: actions/upload-artifact@v4
+        with: {name: fpsboost-1.0.0-MC1.21.11, path: build/libs/fpsboost-1.0.0.jar}
